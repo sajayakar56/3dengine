@@ -1,0 +1,3 @@
+DESC: Negative vectors create false cubes
+SCENARIO: One cube at Point(1, 1, 0)
+- In the map, there is a cube; however, there is another on the other side behind the viewer.

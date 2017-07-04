@@ -1,6 +1,16 @@
-from classes import *
+import sys
+from math import radians
+from engine.Map import Map
+from engine.Canvas import Canvas
+from engine.Camera import Camera
+from engine.Math3D import Vector, Point
+
+
 origin = Point(0, 0, 0)
-m = Map(7, 7, 1)
-m[Point(3, 3, 0)] = 1
-m[Point(1, 6, 0)] = 1
-c = Camera(origin, radians(50), radians(45), m)
+m = Map()
+camera = Camera(origin, radians(70), radians(45), m)
+# Placing one block at (1, 1, 0)
+m.add_box(Point(1, 1, 0))
+
+print(m.hit(Vector(1, 1, 0), origin, radians(45)))
+print(m.hit(Vector(-1, -1, 0), origin, radians(45)))

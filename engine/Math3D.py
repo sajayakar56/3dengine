@@ -1,28 +1,12 @@
 from math import sqrt, sin, cos, atan, floor
 from operator import add, mul            
-        
 
-class Point:
+
+# Interface for Point and Vector
+class Super2D:
     def __init__(self, *coords):
         self.coords = (coords[0], coords[1], 0)
         self.parent_class = self.__class__
-
-    # Floors to integer values
-    def floor(self):
-        return self.parent_class(list(map(floor(self.coords))))
-
-    def round(self, length):
-        return self.parent_class(list(map(round(self.coords, length))))
-
-    def invert(self):
-        return self.parent_class(self.y, self.x, 0)
-        
-    def negative(self):
-        return any(n < 0 for n in self.coords)
-
-    # Euclidean distance for xy
-    def distTo(self, other):
-        return sqrt(pow(self.x - other.x, 2) + pow(self.y - other.y, 2))
 
     @property
     def x(self):
@@ -35,9 +19,6 @@ class Point:
     @property
     def z(self):
         return self.coords[2]
-
-    def __repr__(self):
-        return "Point{}".format(self.coords)
 
     def __str__(self):
         return str(self.coords)
@@ -67,10 +48,31 @@ class Point:
 
     def __rmul__(self, other):
         return self * other
+    
+    # Floors to integer values
+    def floor(self):
+        return self.parent_class(list(map(floor(self.coords))))
 
+    def round(self, length):
+        return self.parent_class(list(map(round(self.coords, length))))
+
+    def invert(self):
+        return self.parent_class(self.y, self.x, 0)
         
-# They should not extend each other 
-class Vector(Point):
+    def negative(self):
+        return any(n < 0 for n in self.coords)
+        
+
+class Point(Super2D):
+    # Euclidean distance for xy
+    def distTo(self, other):
+        return sqrt(pow(self.x - other.x, 2) + pow(self.y - other.y, 2))
+
+    def __repr__(self):
+        return "Point{}".format(self.coords)
+
+
+class Vector(Super2D):
     def magnitude(self):
         return sqrt(self.dot(self))
 
@@ -114,12 +116,13 @@ class Box:
             tmin = max(tmin, min(ty1, ty2))
             tmax = min(tmax, max(ty1, ty2))
 
-        x = o.x + (tmin * v.x)
-        y = o.y + (tmin * v.y)
+        if tmax >= 0:
+            x = o.x + (tmin * v.x)
+            y = o.y + (tmin * v.y)
 
-        dist = sqrt((o.x - x) ** 2 + (o.y - y) ** 2)
-
-        return (tmax >= tmin, dist)
+            dist = sqrt((o.x - x) ** 2 + (o.y - y) ** 2)
+            return (tmax >= tmin, dist)
+        return (None, None,)
 
 
 class Calc:

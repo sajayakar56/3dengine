@@ -7,15 +7,15 @@ class Map:
     def __init__(self):
         self.boxes = []
 
-    def max_ray_distance(self):
+    def max_ray_distance(self) -> int:
         return 50
 
-    def point_to_index(self, point):
+    def point_to_index(self, point: Point) -> tuple:
         x = int(point.x)
         y = int(point.y)
         return x, y
 
-    # Need this to go in order of boxes closest to o, or it will be incorrect
+    # Need this to go in order of boxes closest to o, or it will be incorrect (i think)
     def hit(self, v: Vector, o: Point, theta: float) -> tuple:
         for box in self.boxes:
             intersection = box.intersect(v, o)
@@ -26,7 +26,7 @@ class Map:
     def add_box(self, p: Point) -> None:
         self.boxes.append(Box(p))
 
-    # Right now, prints out X and Y swapped
-    def __str__(self):
+    # Right now, accomplishes nothing
+    def __str__(self) -> str:
         string = ""
         return string

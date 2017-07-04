@@ -22,8 +22,10 @@ class Canvas(tk.Canvas):
     def draw_rectangle(self, coords, h):
         height = self.height//2
         h = h // 2
-        coords = (coords[0], height - h, coords[1], height + h)
-        self.create_rectangle(coords, outline="white", fill="black")
+        # coords = (coords[0], height - h, coords[1], height + h)
+        # self.create_rectangle(coords, outline="white", fill="black")
+        self.create_line(coords[0], height - h, coords[0], height + h, fill="grey",
+                         arrow=tk.BOTH, arrowshape=(1, 1, 1))
         self.pack()
 
     def partition(self, n):
