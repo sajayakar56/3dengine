@@ -7,7 +7,8 @@ class Canvas(tk.Canvas):
     def __init__(self, root, width, height):
         self.width, self.height = width, height
         self.root = root
-        super().__init__(width=self.width, height=self.height)
+        super().__init__(width=self.width, height=self.height, bg="blue")
+        self.background_image = tk.PhotoImage(file="engine/skybox.gif")
         self.pack()
 
     def mainloop(self, camera, precision):
@@ -22,10 +23,9 @@ class Canvas(tk.Canvas):
     def draw_rectangle(self, coords, h):
         height = self.height//2
         h = h // 2
-        # coords = (coords[0], height - h, coords[1], height + h)
+        coords = (coords[0], height - h, coords[1], height + h)
         # self.create_rectangle(coords, outline="white", fill="black")
-        self.create_line(coords[0], height - h, coords[0], height + h, fill="grey",
-                         arrow=tk.BOTH, arrowshape=(1, 1, 1))
+        self.create_rectangle(coords, fill="black", outline="white")
         self.pack()
 
     def partition(self, n):

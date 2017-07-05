@@ -9,6 +9,10 @@ from .Canvas import Canvas
 
 class Scene:
     def __init__(self, precision):
+        # DEBUG
+        # DEBUG_POINT = Point(3, 3, 0)
+        # DEBUG_ANGLE = radians(10)
+        # END DEBUG
         self.precision = precision
         origin = Point(0, 0, 0)
         self.map = Map()
@@ -37,16 +41,11 @@ class Scene:
 # Write a method in Map that lets one easily define a map
 def gen_map(m):
     m.add_box(Point(1, 1, 0))
-    # m.add_box(Point(3, 3, 0))
-    # m.add_box(Point(3, 4, 0))
-    # m.add_box(Point(1, 6, 0))
-    # m.add_box(Point(3, 5, 0))
-    # m.add_box(Point(5, 3, 0))
-    # m.add_box(Point(5, 4, 0))
-    # m.add_box(Point(5, 5, 0))
-    
-
-
-
-
+    m.add_box(Point(3, 3, 0))
+    m.add_box(Point(3, 4, 0))
+    m.add_box(Point(1, 6, 0))
+    m.add_box(Point(3, 5, 0))
+    m.add_box(Point(5, 3, 0))
+    m.add_box(Point(5, 4, 0))
+    m.add_box(Point(5, 5, 0))
 

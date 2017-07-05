@@ -97,6 +97,7 @@ class Box:
     def __init__(self, p: Point):
         self.x = int(p.x)
         self.y = int(p.y)
+        self.point = Point(self.x + 0.5, self.y + 0.5, 0)
 
     # From tavianator.com, fast vector AABB
     def intersect(self, v: Vector, o: Point) -> tuple:

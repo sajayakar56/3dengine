@@ -6,6 +6,7 @@ epsilon = 0.000001
 class Map:
     def __init__(self):
         self.boxes = []
+        # Dictionary from tuple(coords) -> list of indexes of boxes
 
     def max_ray_distance(self) -> int:
         return 50
@@ -17,10 +18,14 @@ class Map:
 
     # Need this to go in order of boxes closest to o, or it will be incorrect (i think)
     def hit(self, v: Vector, o: Point, theta: float) -> tuple:
+        intersections = []
         for box in self.boxes:
             intersection = box.intersect(v, o)
             if intersection[0]:
-                return (intersection[1], theta)
+                intersections.append(intersection)
+        if intersections:
+            return_val = min(intersections, key=lambda x: x[1])
+            return (return_val[1], theta)
         return None
 
     def add_box(self, p: Point) -> None:

@@ -9,7 +9,8 @@ class Camera:
     def cast(self, angle):
         m = self.m
         v = c.angle_to_vector(angle)
-        return m.hit(v, self.pos, angle)
+        return_val = m.hit(v, self.pos, angle)
+        return return_val
 
     def move(self, v):
         self.pos = c.point_and_vector(self.pos, v)
