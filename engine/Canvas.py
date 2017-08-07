@@ -1,5 +1,4 @@
 import tkinter as tk
-from .Math3D import Calc as c
 from math import cos
 
 
@@ -7,18 +6,24 @@ class Canvas(tk.Canvas):
     def __init__(self, root, width, height):
         self.width, self.height = width, height
         self.root = root
-        super().__init__(width=self.width, height=self.height, bg="blue")
+        super().__init__(width=self.width, height=self.height, bg="black")
         self.background_image = tk.PhotoImage(file="engine/skybox.gif")
         self.pack()
 
     def mainloop(self, camera, precision):
-        self.run(camera, precision)
+        self.precision = precision
+        self.run(camera)
         self.pack()
         super().mainloop()
 
     def clear(self):
         self.delete("all")
         self.pack()
+
+    def changePrecision(self, delta: int):
+        self.precision += delta
+        if self.precision < 1:
+            self.precision = 1
 
     def draw_rectangle(self, coords, h):
         height = self.height//2
@@ -38,10 +43,10 @@ class Canvas(tk.Canvas):
         return lst
 
     # precision is how much to decrease # of operations done
-    def run(self, camera, precision=1):
+    def run(self, camera):
         self.clear()
-        lst = self.partition(self.width // precision)
-        rays = camera.raycast(self.width // precision)
+        lst = self.partition(self.width // self.precision)
+        rays = camera.raycast(self.width // self.precision)
         for i in range(len(rays)):
             ray = rays[i]
             if ray:

@@ -7,12 +7,11 @@ from .Camera import Camera
 from .Canvas import Canvas
 
 
+TURNDELTA = 0.1
+
+
 class Scene:
     def __init__(self, precision):
-        # DEBUG
-        # DEBUG_POINT = Point(3, 3, 0)
-        # DEBUG_ANGLE = radians(10)
-        # END DEBUG
         self.precision = precision
         origin = Point(0, 0, 0)
         self.map = Map()
@@ -26,15 +25,25 @@ class Scene:
     def key(self, event):
         if event.char == "q":
             tk.Tk().destroy()
+            quit()
         if event.char == "w":
             self.cam.move(c.angle_to_vector(self.cam.direction).unit() * (1 / 4))
         if event.char == "s":
             self.cam.move(-c.angle_to_vector(self.cam.direction).unit() * (1 / 4))
         if event.char == "a":
-            self.cam.direction += .1
+            self.cam.direction += TURNDELTA
         if event.char == "d":
-            self.cam.direction -= .1
-        self.canvas.run(self.cam, self.precision)
+            self.cam.direction -= TURNDELTA
+        if event.char == "1":
+            # Change to radians; right now in degrees
+            self.cam.changeFoV(radians(-1))
+        if event.char == "2":
+            self.cam.changeFoV(radians(1))
+        if event.char == "3":
+            self.canvas.changePrecision(1)
+        if event.char == "4":
+            self.canvas.changePrecision(-1)
+        self.canvas.run(self.cam)
 
 
 # Hardcoded in map

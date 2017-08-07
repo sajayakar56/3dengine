@@ -5,6 +5,9 @@ class Camera:
     def __init__(self, pos, fov, direction, m):
         self.pos, self.fov, self.direction, self.m = pos, fov, direction, m
 
+    def changeFoV(self, delta: float) -> None:
+        self.fov += delta
+
     # Fix for non integer location of camera
     def cast(self, angle):
         m = self.m
