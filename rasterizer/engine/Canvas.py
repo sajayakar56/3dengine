@@ -8,6 +8,7 @@ class Canvas(tk.Canvas):
     def __init__(self, root, width, height):
         self.width, self.height = width, height
         self.root = root
+        self.fill = ""
         super().__init__(width=self.width, height=self.height, bg="white")
         self.pack()
 
@@ -28,7 +29,7 @@ class Canvas(tk.Canvas):
         pixels = []
         cx, cy, cz = c.x, c.y, c.z
         tx, ty, tz = c.tx, c.ty, c.tz
-        ex, ey, ez = c.ex, c.ey, c.ez
+        ex, ey, ez = -self.width // 2, -self.height // 2, 400
 
         for pt in triangle.points:
             ax, ay, az = pt.x, pt.y, pt.z
@@ -40,15 +41,29 @@ class Canvas(tk.Canvas):
             dy = sin(tx) * (cos(ty) * z + sin(ty) * (sin(tz) * y + cos(tz) * x)) + cos(tx) * (cos(tz) * y - sin(tz) * x)
             dz = cos(tx) * (cos(ty) * z + sin(ty) * (sin(tz) * y + cos(tz) * x)) - sin(tx) * (cos(tz) * y - sin(tz) * x)
 
+            if dz < 0:
+                return None
+                        
             bx = (ez / dz) * dx - ex
             by = (ez / dz) * dy - ey
             pixels.append((bx, by))
-        while pixels != []:
-            p1 = pixels.pop()
-            for p2 in pixels:
-                self.create_line(int(p1[0]),
-                                 int(p1[1]),
-                                 int(p2[0]),
-                                 int(p2[1]))
+        self.draw_relative_triangle(pixels)
+        # while pixels != []:
+        #     p1 = pixels.pop()
+        #     for p2 in pixels:
+        #         self.create_line(int(p1[0]),
+        #                          int(p1[1]),
+        #                          int(p2[0]),
+        #                          int(p2[1]))
         self.pack()
+
+    # Can add a fill pass?
+    def draw_relative_triangle(self, pixels) -> None:
+        self.create_polygon(pixels, fill=self.fill, outline='black')
+
+    def change_fill(self, new: str) -> None:
+        self.fill = new
+
+    def valid_pixel(self, px: tuple) -> bool:
+        return (px[0] > 0) and (px[1] > 0)
 
