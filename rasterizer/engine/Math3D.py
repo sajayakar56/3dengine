@@ -96,12 +96,15 @@ class Triangle:
     @property
     def p3(self):
         return self.points[2]
+<<<<<<< HEAD
         
     def __str__(self):
         return "Triangle: " + str(self.p1) + str(self.p2) + str(self.p3)
         
     def __repr__(self):
         return self.__str__()
+=======
+>>>>>>> 95908fe0e48159769784628f3667be94f220f25b
     
 
 class Calc:

@@ -21,7 +21,7 @@ class Canvas(tk.Canvas):
     def clear(self):
         self.delete("all")
         self.pack()
-        
+
     # An object is a list of triangles
     def draw_object(self, obj, c: Camera):
         for triangle in obj:
@@ -45,7 +45,7 @@ class Canvas(tk.Canvas):
 
             if dz < 0:
                 return None
-                        
+
             bx = (ez / dz) * dx - ex
             by = (ez / dz) * dy - ey
             pixels.append((bx, by))

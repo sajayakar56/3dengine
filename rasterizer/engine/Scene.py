@@ -68,6 +68,4 @@ C: Create cube
 N: Wireframe
 M: Solid
 """
-print(message)
-
-        
+print(message)        		
