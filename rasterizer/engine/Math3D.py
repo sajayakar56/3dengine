@@ -48,7 +48,7 @@ class Super2D:
 
     def __rmul__(self, other):
         return self * other
-            
+
 
 class Point(Super2D):
     # Euclidean distance for xy, needs z to be added
@@ -96,17 +96,14 @@ class Triangle:
     @property
     def p3(self):
         return self.points[2]
-<<<<<<< HEAD
-        
+
     def __str__(self):
         return "Triangle: " + str(self.p1) + str(self.p2) + str(self.p3)
-        
+
     def __repr__(self):
         return self.__str__()
-=======
->>>>>>> 95908fe0e48159769784628f3667be94f220f25b
-    
 
+        
 class Calc:
     def create_object(*args):
         nums = []
@@ -147,11 +144,11 @@ class Calc:
                                   x, y, z + l,
                                   x + 1, y, z + l,
                                   x + l, y, z,
-                                  
+
                                   x, y, z,
                                   x, y + l, z,
                                   x, y + l, z + l,
-                                  
+
                                   x, y + l, z + l,
                                   x, y, z + l,
                                   x, y, z,
