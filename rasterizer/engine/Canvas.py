@@ -1,7 +1,6 @@
 import tkinter as tk
 from math import sin, cos, pi
 from .Camera import Camera
-import threading
 import random
 
 
@@ -29,12 +28,13 @@ class Canvas(tk.Canvas):
 
     def draw_triangle(self, triangle, c: Camera):
         pixels = []
+        # Shoutout to Wikipedia's fast triangle transform algorithm <3
         cx, cy, cz = c.x, c.y, c.z
         tx, ty, tz = c.tx, c.ty, c.tz
         ex, ey, ez = -self.width // 2, -self.height // 2, 400
 
         for pt in triangle.points:
-            ax, ay, az = pt.x, pt.y, pt.z
+            ax, ay, az = pt
             x = ax - cx
             y = ay - cy
             z = az - cz

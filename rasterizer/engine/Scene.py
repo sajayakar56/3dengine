@@ -3,7 +3,7 @@ from .Canvas import Canvas
 from .Math3D import Calc as cc
 import tkinter as tk
 
-DELTA = 5
+DELTA = 10
 DELTA_A = 0.1
 
 
@@ -67,5 +67,6 @@ Z/X: Move up/down
 C: Create cube
 N: Wireframe
 M: Solid
+P: Trippy (don't do this if you have problems with seizures)
 """
 print(message)        		
