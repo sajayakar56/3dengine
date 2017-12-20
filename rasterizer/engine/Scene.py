@@ -5,13 +5,15 @@ import tkinter as tk
 
 DELTA = 10
 DELTA_A = 0.1
+WIDTH = 1440
+HEIGHT = 900
 
 
 class Scene:
     def __init__(self, obj = None):
         self.objects = []
         self.cam = Camera()
-        self.canvas = Canvas(tk.Tk(), 800, 800)
+        self.canvas = Canvas(tk.Tk(), WIDTH, HEIGHT)
         self.canvas.bind("<Key>", self.key)
         self.canvas.focus_set()
         if obj:
