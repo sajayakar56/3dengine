@@ -1,20 +1,24 @@
+/***********************
+ * Let's try drawing a line
+ * Stephen Jayakar
+ ************************/
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <cstdlib>
 #include <iostream>
-#include <cmath>
-
-using namespace std;
 
 static int WIDTH = 640;
 static int HEIGHT = 480;
+float rotatex = 0, rotatey = 0, mousex = 0, mousey = 0;
 bool dragging = false;
 int keyArr[350];
 
-// GLFW functions
 static void Init(void) {
   glMatrixMode(GL_MODELVIEW);
+  // TODO: This might be shaders
   glLoadIdentity();
+  // The background color
   glClearColor(0.0, 0.0, 0.0, 1.0);
 }
 
@@ -23,8 +27,8 @@ static void Update(GLFWwindow *window, float delta) {
   if (keyArr[GLFW_KEY_ESCAPE])
     glfwSetWindowShouldClose(window, 1);
   // Why are things rotating tbh
-  // rotatex += keyArr[GLFW_KEY_LEFT] - keyArr[GLFW_KEY_RIGHT];
-  // rotatey += keyArr[GLFW_KEY_UP] - keyArr[GLFW_KEY_DOWN];
+  rotatex += keyArr[GLFW_KEY_LEFT] - keyArr[GLFW_KEY_RIGHT];
+  rotatey += keyArr[GLFW_KEY_UP] - keyArr[GLFW_KEY_DOWN];
 }
 
 static void RenderScene(GLFWwindow *window, float delta) {
@@ -32,8 +36,8 @@ static void RenderScene(GLFWwindow *window, float delta) {
   glColor3f(1, 1, 1);
 
   glBegin(GL_LINE_LOOP);
-  glVertex2f(-1.0, -1.0);
-  glVertex2f(1.0, 1.0);
+  glVertex2f(0.25, 0.25);
+  glVertex2f(0.75, 0.25);
   glEnd();
   glFlush();
 }
@@ -63,45 +67,8 @@ static void MouseClickCallback(GLFWwindow *window, int button, int action, int m
 
 static void MouseMotionCallback(GLFWwindow *window, double x, double y) {
   if (dragging) {
-    // mousex += x;
-    // mousey += y;
-  }
-}
-
-
-// Intersection formula AABB
-float intersect(float ox, float oy,
-	      float vx, float vy,
-	      float bx, float by) {
-  float tmin = -10000;
-  float tmax = 10000;
-  float result = 0.0;
-  
-  if (vx != 0.0) {
-    float tx1 = (bx - ox) / vx;
-    float tx2 = (bx + 1 - ox) / vx;
-
-    tmin = max(tmin, min(tx1, tx2));
-    tmax = min(tmax, max(tx1, tx2));
-  }
-
-  if (vy != 0.0) {
-    float ty1 = (by - oy) / vy;
-    float ty2 = (by + 1 - oy) / vy;
-
-    tmin = max(tmin, min(ty1, ty2));
-    tmax = min(tmax, max(ty1, ty2));
-  }
-
-  float x = oy + (tmin * vx);
-  float y = oy + (tmin * vx);
-  float dist = (float) sqrt(pow(ox - x, 2) + pow(oy - y, 2));
-  result = dist;
-  
-  if (tmax >= tmin) {
-    return result;
-  } else {
-    return -1.0;
+    mousex += x;
+    mousey += y;
   }
 }
 
@@ -129,5 +96,5 @@ int main(int argc, char** argv) {
     glfwPollEvents();
   }
   glfwDestroyWindow(window);
-  return 0;  
+  return 0;
 }
