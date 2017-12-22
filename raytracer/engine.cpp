@@ -8,8 +8,10 @@ using namespace std;
 
 static int WIDTH = 640;
 static int HEIGHT = 480;
+static float MAX_RAY_DIST = 999.0;
 bool dragging = false;
 int keyArr[350];
+float PI = 3.14159;
 
 // GLFW functions
 static void Init(void) {
@@ -19,7 +21,7 @@ static void Init(void) {
 }
 
 static void Update(GLFWwindow *window, float delta) {
-  std::cout << "delta:" << delta << std::endl;
+  // std::cout << "delta:" << delta << std::endl;
   if (keyArr[GLFW_KEY_ESCAPE])
     glfwSetWindowShouldClose(window, 1);
   // Why are things rotating tbh
@@ -93,19 +95,116 @@ float intersect(float ox, float oy,
     tmax = min(tmax, max(ty1, ty2));
   }
 
-  float x = oy + (tmin * vx);
-  float y = oy + (tmin * vx);
-  float dist = (float) sqrt(pow(ox - x, 2) + pow(oy - y, 2));
-  result = dist;
-  
-  if (tmax >= tmin) {
-    return result;
+  if (tmax >= 0) {
+    float x = ox + (tmin * vx);
+    float y = oy + (tmin * vy);
+    float dist = sqrt(pow((ox - x), 2) + pow((oy - y), 2));
+    return dist;
   } else {
     return -1.0;
   }
 }
 
+// 3DEngine stuff
+float degreesToRadians(float degrees) {
+  return (degrees / 180) * PI;
+}
+
+struct Vector {
+    float x;
+    float y;
+};
+typedef struct Vector Vector;
+
+struct Camera {
+  float x;
+  float y;
+  float fov;
+  // Angle 
+  float direction;
+};
+typedef struct Camera Camera;
+
+struct Box {
+  float x;
+  float y;
+};
+typedef struct Box Box;
+
+struct Map {
+  Box *boxes;
+  int size;
+};
+typedef struct Map Map;  
+
+Vector angleToVector(float angle) {
+  Vector v;
+  v.x = cos(angle);
+  v.y = sin(angle);
+  return v;
+}
+
+float mapHit(Map *m, Vector v, float ox, float oy) {
+  float minIntersection = MAX_RAY_DIST;
+  for (int i = 0; i < m->size; i++) {
+    Box box = m->boxes[i];
+    float intersection = intersect(ox, oy, v.x, v.y, box.x, box.y);
+    if (intersection != 0.0 && intersection != -1.0 && intersection < minIntersection) {
+	minIntersection = intersection;
+    }
+  }
+  return minIntersection;
+}
+
+// Raycast one ray
+float raycast(float ox, float oy, float angle, Map *m) {
+  Vector v = angleToVector(angle);
+  printf("Vector x, y, a: (%f, %f, %f)\n", v.x, v.y, angle);
+  return mapHit(m, v, ox, oy);
+}
+
+// Cast multiple rays for the camera
+float *castRays(Camera *c, int n, Map *m) {
+  float delta_fov = c->fov / (n - 1);
+  float theta = c->direction + (c->fov / 2);
+  float *rays = (float *) malloc(sizeof(float) * n - 1);
+  for (int i = 0; i < (n - 1); i++) {
+    float ray = raycast(c->x, c->y, theta, m);
+    rays[i] = ray;
+    theta -= delta_fov;
+  }
+  return rays;
+}
+
+Map createMap(int size) {
+  Map m;
+  m.size = size;
+  m.boxes = (Box *) malloc(sizeof(Box) * size);
+  return m;
+}
+
 int main(int argc, char** argv) {
+  // Some sample code to cast rays
+  Camera c;
+  c.x = 0.0, c.y = 0.0, c.fov = degreesToRadians(70), c.direction = degreesToRadians(45);
+  Map m = createMap(1);
+  // This is a bad idea, should be double pointers right?
+  // Actually, it might be on the heap, since i'm copying into it???
+  Box b;
+  b.x = 1.0, b.y = 1.0;
+  m.boxes[0] = b;
+  // How many rays to cast
+  int N = 20;
+  float *rays = castRays(&c, N, &m);
+  for (int i = 0; i < N - 1; i++) {
+    printf("%f\n", rays[i]);
+  }
+
+  printf("Some independent tests\n");
+  float x = intersect(0, 0, 0.5, 0.5, 1, 1);
+  float y = intersect(0, 0, 0.45, 0.5, 1, 1);
+  printf("a: %f, b: %f\n", x, y);
+  
   GLFWwindow *window;
 
   glfwInit();
