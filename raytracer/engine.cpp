@@ -175,7 +175,7 @@ float raycast(float ox, float oy, float angle, Map *m) {
 float *castRays(Camera *c, int n, Map *m) {
   float delta_fov = c->fov / (n - 1);
   float theta = c->direction + (c->fov / 2);
-  float *rays = (float *) malloc(sizeof(float) * n - 1);
+  float *rays = (float *) malloc(sizeof(float) * (n - 1));
   for (int i = 0; i < (n - 1); i++) {
     float ray = raycast(c->x, c->y, theta, m);
     rays[i] = ray;
@@ -206,16 +206,19 @@ int main(int argc, char** argv) {
   float *rays = castRays(&c, N, &m);
   
   float heights[WIDTH];
+  float dtheta = c.fov / WIDTH;
+  float theta = c.direction + (c.fov / 2);  
   // Convert rays to height
   for (int i = 0; i < WIDTH; i++) {
     if (rays[i] != MAX_RAY_DIST) {
       // Need to add the cosine of the angle the ray was cast at 
-      float height = 1 / (rays[i]);
+      float height = 2 / (rays[i] * abs(cos(c.direction - theta)));
       heights[i] = height;
       printf("%f\n", height);
     } else {
       heights[i] = 0.0;
-    }    
+    }
+    theta -= dtheta;
   }
 
   printf("Some independent tests\n");
