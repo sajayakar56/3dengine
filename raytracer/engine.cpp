@@ -29,13 +29,21 @@ static void Update(GLFWwindow *window, float delta) {
   // rotatey += keyArr[GLFW_KEY_UP] - keyArr[GLFW_KEY_DOWN];
 }
 
-static void RenderScene(GLFWwindow *window, float delta) {
+static void RenderScene(GLFWwindow *window, float *heights, int numHeights) {
   glClear(GL_COLOR_BUFFER_BIT);
   glColor3f(1, 1, 1);
 
   glBegin(GL_LINE_LOOP);
-  glVertex2f(-1.0, -1.0);
-  glVertex2f(1.0, 1.0);
+  float w = -1.0;
+  float delta = .00325;
+  // we can optimize this haha
+  for (int i = 0; i < numHeights; i++) {
+    float dh = heights[i] / 2;
+    glVertex2f(w, -dh);
+    glVertex2f(w, dh);
+    w += delta;
+    printf("%f, %f\n", w, dh);
+  }
   glEnd();
   glFlush();
 }
@@ -72,6 +80,7 @@ static void MouseMotionCallback(GLFWwindow *window, double x, double y) {
 
 
 // Intersection formula AABB
+// If it intersects, it says how far away
 float intersect(float ox, float oy,
 	      float vx, float vy,
 	      float bx, float by) {
@@ -95,7 +104,7 @@ float intersect(float ox, float oy,
     tmax = min(tmax, max(ty1, ty2));
   }
 
-  if (tmax >= 0) {
+  if (tmax >= tmin) {
     float x = ox + (tmin * vx);
     float y = oy + (tmin * vy);
     float dist = sqrt(pow((ox - x), 2) + pow((oy - y), 2));
@@ -159,7 +168,6 @@ float mapHit(Map *m, Vector v, float ox, float oy) {
 // Raycast one ray
 float raycast(float ox, float oy, float angle, Map *m) {
   Vector v = angleToVector(angle);
-  printf("Vector x, y, a: (%f, %f, %f)\n", v.x, v.y, angle);
   return mapHit(m, v, ox, oy);
 }
 
@@ -194,14 +202,24 @@ int main(int argc, char** argv) {
   b.x = 1.0, b.y = 1.0;
   m.boxes[0] = b;
   // How many rays to cast
-  int N = 20;
+  int N = WIDTH;
   float *rays = castRays(&c, N, &m);
-  for (int i = 0; i < N - 1; i++) {
-    printf("%f\n", rays[i]);
+  
+  float heights[WIDTH];
+  // Convert rays to height
+  for (int i = 0; i < WIDTH; i++) {
+    if (rays[i] != MAX_RAY_DIST) {
+      // Need to add the cosine of the angle the ray was cast at 
+      float height = 1 / (rays[i]);
+      heights[i] = height;
+      printf("%f\n", height);
+    } else {
+      heights[i] = 0.0;
+    }    
   }
 
   printf("Some independent tests\n");
-  float x = intersect(0, 0, 0.5, 0.5, 1, 1);
+  float x = intersect(0, 0, 0.0, 1.0, 1, 1);
   float y = intersect(0, 0, 0.45, 0.5, 1, 1);
   printf("a: %f, b: %f\n", x, y);
   
@@ -222,7 +240,7 @@ int main(int argc, char** argv) {
   while (!glfwWindowShouldClose(window)) {
     float delta = glfwGetTime();
     Update(window, delta);
-    RenderScene(window, delta);
+    RenderScene(window, heights, WIDTH);
     glfwSetTime(0);
     glfwSwapBuffers(window);
     glfwPollEvents();

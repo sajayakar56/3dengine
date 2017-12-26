@@ -157,7 +157,7 @@ class Calc:
 
 if __name__ == "__main__":
     b = Box(Point(1, 1, 0))
-    o = Point(0, 0, 0)
-    v = Vector(1, 0.5, 0)
+    o = Point(0.0, 0.0, 0)
+    v = Vector(0, 0.5, 0)
 
     print(b.intersect(v, o))

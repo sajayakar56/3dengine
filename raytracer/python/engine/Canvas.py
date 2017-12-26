@@ -7,7 +7,7 @@ class Canvas(tk.Canvas):
         self.width, self.height = width, height
         self.root = root
         super().__init__(width=self.width, height=self.height, bg="black")
-        self.background_image = tk.PhotoImage(file="engine/skybox.gif")
+        # self.background_image = tk.PhotoImage(file="engine/skybox.gif")
         self.pack()
 
     def mainloop(self, camera, precision):
